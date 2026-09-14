@@ -3,245 +3,283 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>УЛИЦАТА ГОВОРИ - НЕЗАВИСИМ КРИМИНАЛЕН БЮЛЕТИН</title>
-    <!-- Поддръжка на Tailwind CSS за чист и бърз дизайн -->
+    <title>УЛИЦАТА ГОВОРИ - БРОЙ 01</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // Конфигуриране на шрифтовете
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: {
-                        'crim': ['serif'], // Използваме вграден serif като временен криминален шрифт
-                    }
-                }
-            }
-        }
-    </script>
     <style>
-        /* Специфични стилове за таблет в играта (CEF) */
-        body { margin: 0; padding: 0; overflow: hidden; background-color: #111; color: white; -webkit-user-select: none; }
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
-        /* Вътрешен скрол бар, без да блокира целия таблет */
-        .inner-scroll::-webkit-scrollbar { width: 4px; }
-        .inner-scroll::-webkit-scrollbar-track { background: #1a1a1a; }
-        .inner-scroll::-webkit-scrollbar-thumb { background: #333; border-radius: 2px; }
-        .inner-scroll::-webkit-scrollbar-thumb:hover { background: #bf2020; }
-        
-        /* БЪЛГАРСКИ ШРИФТ ЗА ГЛАВНИТЕ ЗАГЛАВИЯ */
-        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@700&display=swap');
-        h1, h2 { font-family: 'Cormorant Garamond', serif !important; text-transform: uppercase; }
-        
-        /* ЦВЕТОВА СХЕМА: ТЪМНОЧЕРВЕНО И ГРАФИТ */
-        :root { --crimson: #bf2020; --graphite: #2a2a2a; }
+        * { box-sizing: border-box; }
+        body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #0b0b0d;
+            color: #f3f4f6;
+            user-select: none;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+        .tab-pane { display: none; }
+        .tab-pane.active { display: block; }
+        .inner-scroll::-webkit-scrollbar { width: 5px; }
+        .inner-scroll::-webkit-scrollbar-track { background: #121215; }
+        .inner-scroll::-webkit-scrollbar-thumb { background: #3f3f46; border-radius: 2px; }
+        .inner-scroll::-webkit-scrollbar-thumb:hover { background: #b91c1c; }
     </style>
 </head>
-<body class="flex flex-col h-screen font-sans text-sm tracking-tight overflow-hidden">
+<body class="h-screen w-screen flex flex-col overflow-hidden bg-[#0b0b0d] text-gray-100">
 
-    <!-- ФИКСИРАН ХЕДЪР -->
-    <header class="flex items-center justify-between p-3 border-b border-graphite h-16 bg-[#151515] shrink-0">
-        <div class="flex items-center gap-3">
-            <div class="h-10 w-10 border border-graphite rounded-sm flex items-center justify-center p-0.5 bg-black">
-                <!-- *** ЗАМЕНИ ТУК С ДИРЕКТНИЯ ЛИНК КЪМ ТВОЕТО ЛОГО (напр. logo.png) *** -->
-                <img src="ТУК_ПОСТАВИ_ДИРЕКТНИЯ_ЛИНК_КЪМ_ЛОГОТО.png" alt="УЛИЦАТА ГОВОРИ ЛОГО" class="h-full w-auto">
+    <!-- ГЛАВНА НАВИГАЦИОННА ЛЕНТА / ТИКЕР -->
+    <header class="h-16 bg-[#121215] border-b border-neutral-800 flex items-center justify-between px-4 shrink-0 shadow-md">
+        <div class="flex items-center space-x-3">
+            <!-- Вградена емблема гарван/щит (SVG) - никога не чупи сайта -->
+            <div class="w-10 h-10 bg-black border border-red-900/60 rounded flex items-center justify-center text-red-600">
+                <svg class="w-6 h-6 fill-current" viewBox="0 0 24 24">
+                    <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 2.18l7 3.12v4.7c0 4.54-3.14 8.79-7 9.88-3.86-1.09-7-5.34-7-9.88V6.3l7-3.12zM12 6a1 1 0 00-1 1v4H8a1 1 0 000 2h4a1 1 0 001-1V7a1 1 0 00-1-1z"/>
+                </svg>
             </div>
-            <h1 class="text-3xl font-bold tracking-tight text-neutral-100">УЛИЦАТА ГОВОРИ</h1>
-            <span class="text-xs text-neutral-500 font-crim">НЕЗАВИСИМ КРИМИНАЛЕН БЮЛЕТИН / БРОЙ 01</span>
+            <div>
+                <h1 class="text-xl font-black tracking-widest text-neutral-100 uppercase">УЛИЦАТА ГОВОРИ</h1>
+                <p class="text-[11px] font-bold tracking-wider text-red-600 uppercase">Независим криминален бюлетин | Брой 01</p>
+            </div>
         </div>
-        <div class="text-right text-xs text-neutral-500">
-            <div>ЛУКОВИТ / ЛОВЕЧ / РБ</div>
-            <div id="date-time">Сряда, 16 Септември 2026, 13:45</div>
+
+        <div class="flex items-center space-x-4">
+            <div class="text-right hidden sm:block">
+                <div id="liveClock" class="text-sm font-mono font-bold text-neutral-200">12:00:00</div>
+                <div class="text-[10px] text-neutral-500 uppercase tracking-widest">Оперативна мрежа</div>
+            </div>
+            <span class="px-2.5 py-1 bg-red-950/80 border border-red-700/50 text-red-400 text-xs font-bold rounded">
+                ПРЕМИЕРА
+            </span>
         </div>
     </header>
 
-    <!-- ОСНОВНА ЧАСТ НА ТАБЛЕТА -->
-    <main class="flex flex-1 min-h-0 bg-[#111]">
+    <!-- ОСНОВНА ТАБЛЕТНА СРЕЛА (3 КОЛОНИ) -->
+    <div class="flex-1 flex overflow-hidden">
         
-        <!-- ЛЯВА КОЛОНА: НАВИГАЦИЯ & УЧРЕДИТЕЛИ -->
-        <nav class="w-1/4 border-r border-graphite p-4 flex flex-col gap-6 bg-[#1a1a1a] shrink-0 min-w-[200px]">
-            <div class="p-3 border border-graphite rounded-sm bg-black text-center flex flex-col items-center gap-3">
-                <div class="h-12 w-12 border-2 border-dashed border-neutral-700 flex items-center justify-center">
-                   <img src="ТУК_ПОСТАВИ_ДИРЕКТНИЯ_ЛИНК_КЪМ_ЛОГОТО.png" alt="УЛИЦАТА ГОВОРИ ЕМБЛЕМА" class="h-full w-auto p-1 opacity-60">
+        <!-- ЛЯВА КОЛОНА: РЕДАКЦИЯ & МЕНЮ -->
+        <aside class="w-64 bg-[#0f0f12] border-r border-neutral-800 flex flex-col justify-between p-4 shrink-0">
+            <div class="space-y-4">
+                <!-- Каре на основателите -->
+                <div class="p-3 bg-[#15151a] border border-neutral-800 rounded">
+                    <div class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-1">Редактори / Автори:</div>
+                    <div class="text-sm font-black text-neutral-100">М. Маринов & Д. Николов</div>
+                    <div class="text-[11px] text-red-500 font-bold uppercase">Бивши оперативни служители</div>
                 </div>
-                <div>
-                    <div class="font-crim text-base text-neutral-200">М. МАРИНОВ / Д. НИКОЛОВ</div>
-                    <div class="text-xs text-[--crimson] tracking-widest uppercase">Бивши оперативни служители</div>
-                </div>
-            </div>
-            <div class="flex flex-col gap-2">
-                <button onclick="showTab('manifesto')" class="tab-btn active text-left px-4 py-2 border-l-2 border-[--crimson] bg-[#1a1a1a] text-white hover:bg-[#252525] flex items-center gap-3">
-                   <span class="text-lg">»</span> НАШИЯТ МАНИФЕСТ
-                </button>
-                <button onclick="showTab('sponsors')" class="tab-btn text-left px-4 py-2 border-l-2 border-transparent text-neutral-400 hover:text-white hover:bg-[#252525] flex items-center gap-3">
-                    <span class="text-lg">»</span> РЕКЛАМЕН КАТАЛОГ
-                </button>
-            </div>
-            <div class="mt-auto text-center border-t border-graphite pt-4 text-[--graphite]">
-                <div class="text-xs">ЕСТ. 2026</div>
-                <div class="text-[10px] tracking-tight">СОБСТВЕН ВИДЕО НОВИНАРСКИ КАНАЛ</div>
-            </div>
-        </nav>
 
-        <!-- ЦЕНТРАЛНА ЧАСТ: ЧЕТЕЦ -->
-        <section class="flex-1 min-w-0 p-5 bg-[#111] inner-scroll overflow-y-auto">
-            
-            <!-- ТАБ 1: МАНИФЕСТ -->
-            <div id="manifesto" class="tab-content active space-y-5">
-                <header class="border-b border-graphite pb-3">
-                    <h2 class="text-3xl font-bold text-neutral-100">БИВШИ ОПЕРАТИВНИ СЛУЖИТЕЛИ НА МВР СЛАГАТ КАРТИТЕ НА МАСАТА</h2>
-                    <p class="text-sm text-neutral-400 font-crim mt-1">Открит разговор на М. Маринов и Д. Николов за истината, която системата крие</p>
-                </header>
-                
-                <div class="flex gap-4">
-                    <article class="flex-1 space-y-4 text-base text-neutral-100 leading-relaxed font-serif">
-                        <p class="font-bold">МВР, Шесто РУ, КАТ, Прокуратура... Дълги години работихме в системата. Видяхме всичко: разкрихме престъпления, но видяхме и как други бяха замитани под килима.</p>
-                        <p>„Системата не работи за хората, тя работи за себе си.“ – това не е просто клише, това е оперативната реалност. Знаем ги, знаем им жаргона, схемите и методите.</p>
-                        <p>Познаваме „своите“ и „чуждите“ по оперативната линия. Затова напускаме значките.</p>
-                        <p>„УЛИЦАТА ГОВОРИ“ не е просто вестник. Това е нашта платформа за разследваща криминална журналистика.</p>
-                    </article>
-                    <aside class="w-1/3 border border-graphite p-3 bg-black rounded-sm shrink-0 flex flex-col gap-2">
-                        <div class="aspect-[4/3] w-full border border-neutral-700 bg-neutral-900 flex items-center justify-center p-1">
-                            <!-- *** ЗАМЕНИ ТУК С ДИРЕКТНИЯ ЛИНК КЪМ СНИМКАТА НА ДВАМАТА (напр. heroes.jpg) *** -->
-                            <img src="ТУК_ПОСТАВИ_ДИРЕКТНИЯ_ЛИНК_КЪМ_СНИМКАТА_НА_ГЕРОИТЕ.jpg" alt="Маринов и Николов в Луковит" class="h-full w-full object-cover">
-                        </div>
-                        <p class="text-xs text-neutral-400 font-crim text-center">Мартин Маринов (ляво) и Димитър Николов (дясно) в Луковит, 2026 г.</p>
-                    </aside>
-                </div>
+                <!-- Бутони за разделите -->
+                <nav class="space-y-1.5 font-bold text-sm">
+                    <button id="btn-manifesto" onclick="openTab('manifesto')" class="w-full text-left px-3 py-2.5 rounded bg-red-700 text-white flex items-center space-x-2 transition">
+                        <span>▶</span>
+                        <span>МАНИФЕСТ НА БРОЯ</span>
+                    </button>
+                    <button id="btn-sponsors" onclick="openTab('sponsors')" class="w-full text-left px-3 py-2.5 rounded hover:bg-neutral-800 text-neutral-300 flex items-center space-x-2 transition">
+                        <span>▶</span>
+                        <span>КАТАЛОГ РЕКЛАМА</span>
+                    </button>
+                    <button id="btn-channel" onclick="openTab('channel')" class="w-full text-left px-3 py-2.5 rounded hover:bg-neutral-800 text-neutral-300 flex items-center space-x-2 transition">
+                        <span>▶</span>
+                        <span>ТВ КАНАЛ (ПРОЕКТ)</span>
+                    </button>
+                </nav>
             </div>
 
-            <!-- ТАБ 2: КАТАЛОГ С ПОЗИЦИИ -->
-            <div id="sponsors" class="tab-content space-y-5">
-                <header class="border-b border-graphite pb-3">
-                    <h2 class="text-3xl font-bold text-neutral-100">МЯСТО ЗА ВАШАТА РЕКЛАМА</h2>
-                    <p class="text-sm text-neutral-400 font-crim mt-1">Първият брой на независимия бюлетин търси своите партньори от реалния бизнес.</p>
-                </header>
-                
-                <div class="grid grid-cols-2 gap-4">
-                    <!-- ПОЗИЦИЯ 1 -->
-                    <article class="p-4 border border-graphite bg-[#1a1a1a] rounded-sm space-y-2">
-                        <div class="aspect-video w-full border border-dashed border-neutral-700 bg-[#111] flex flex-col items-center justify-center p-3 text-center">
-                            <span class="text-[--graphite] text-3xl font-bold">1/4 БЛОК</span>
-                            <span class="text-base text-neutral-300 font-serif">МЯСТО ЗА РЕКЛАМА</span>
-                            <span class="text-xs text-[--crimson]">НА ЗАВЕДЕНИЕ / КЛУБ / ХОТЕЛ</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-neutral-100">ПОЗИЦИЯ: УРБАН ЛОКАЦИЯ</h3>
-                        <p class="text-sm text-neutral-300">Тази позиция е идеална за популярен клуб или хотел. Всеки полицай и гражданин, който чете таблета си, ще я види.</p>
-                        <button onclick="showSponsorDetails('ПОЗИЦИЯ: УРБАН ЛОКАЦИЯ', 'Намери М. Маринов или Д. Николов на терен или в РУ за уговорка.', 'https://ulitsatagovori.netlify.app/img/example-banner- club.png')" class="w-full mt-2 bg-[#252525] hover:bg-[--crimson] text-white py-1.5 px-3 rounded-sm text-sm">ВИЖ УСЛОВИЯТА</button>
-                    </article>
-                    <!-- ПОЗИЦИЯ 2 -->
-                    <article class="p-4 border border-graphite bg-[#1a1a1a] rounded-sm space-y-2">
-                        <div class="aspect-video w-full border border-dashed border-neutral-700 bg-[#111] flex flex-col items-center justify-center p-3 text-center">
-                            <span class="text-[--graphite] text-3xl font-bold">1/8 БЛОК</span>
-                            <span class="text-base text-neutral-300 font-serif">МЯСТО ЗА РЕКЛАМА</span>
-                            <span class="text-xs text-[--crimson]">НА АВТОСЕРВИЗ / ОХРАНА</span>
-                        </div>
-                        <h3 class="text-xl font-bold text-neutral-100">ПОЗИЦИЯ: ОПЕРАТИВЕН СЕКТОР</h3>
-                        <p class="text-sm text-neutral-300">Малко, но ефикасно каре за локален сервиз, пътна помощ или СОТ, които имат нужда от бърза реакция.</p>
-                         <button onclick="showSponsorDetails('ПОЗИЦИЯ: ОПЕРАТИВЕН СЕКТОР', 'Намери М. Маринов или Д. Николов на терен или в РУ за уговорка.', 'https://ulitsatagovori.netlify.app/img/example-banner- service.png')" class="w-full mt-2 bg-[#252525] hover:bg-[--crimson] text-white py-1.5 px-3 rounded-sm text-sm">ВИЖ УСЛОВИЯТА</button>
-                    </article>
-                </div>
+            <!-- Бележка долу -->
+            <div class="p-2.5 bg-black/40 border border-neutral-800/80 rounded text-[11px] text-neutral-400">
+                <div class="font-bold text-neutral-300 uppercase">Гласът на патрула</div>
+                Без филтри и чадъри от началници.
             </div>
-
-        </section>
-
-        <!-- ДЯСНА КОЛОНА: РЕКЛАМЕН БАНЕР -->
-        <aside class="w-1/4 border-l border-graphite p-4 flex flex-col gap-3 bg-[#111] shrink-0 min-w-[180px]">
-            <h3 class="text-xs text-neutral-600 font-crim tracking-widest uppercase">РЕКЛАМНО МЯСТО (БАНЕР)</h3>
-            
-            <!-- ПРАЗНИ РЕКЛАМНИ КАРЕТА ЗА БРОЙ 01 -->
-            <button onclick="showSponsorDetails('МЯСТО ЗА ВАШАТА РЕКЛАМА', 'Това е премиерната рекламна позиция в десния радар. Свържи се с нас, за да станеш официален спонсор!', 'https://ulitsatagovori.netlify.app/img/example-banner- right.png')" class="w-full p-3 border border-dashed border-neutral-700 bg-[#1a1a1a] rounded-sm text-center flex flex-col gap-1 items-center hover:border-[--crimson]">
-                <span class="text-[--graphite] text-2xl font-bold">1/2</span>
-                <span class="text-base text-neutral-300 font-serif">МЯСТО ЗА РЕКЛАМА</span>
-                <span class="text-xs text-[--crimson]">КЛУБ / РЕСТОРАНТ / ХОТЕЛ</span>
-            </button>
-            <button onclick="showSponsorDetails('МЯСТО ЗА ВАШАТА РЕКЛАМА', 'Позиция за местен бизнес в десния радар на таблета. Идеална за автосервиз или сервизни услуги.', 'https://ulitsatagovori.netlify.app/img/example-banner- right.png')" class="w-full p-3 border border-dashed border-neutral-700 bg-[#1a1a1a] rounded-sm text-center flex flex-col gap-1 items-center hover:border-[--crimson]">
-                <span class="text-[--graphite] text-2xl font-bold">1/2</span>
-                <span class="text-base text-neutral-300 font-serif">МЯСТО ЗА РЕКЛАМА</span>
-                <span class="text-xs text-[--crimson]">АВТОСЕРВИЗ / ОХРАНА</span>
-            </button>
         </aside>
 
-    </main>
-
-    <!-- ИНТЕРАКТИВЕН МОДАЛ ЗА ЧЕТЕНЕ НА ОФЕРТИ -->
-    <div id="sponsorModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-8 z-50 tab-content flex flex-col max-w-4xl mx-auto h-[90vh] top-[5vh] border-2 border-[--crimson] rounded-sm">
-        <header class="w-full flex justify-between items-center p-4 border-b border-graphite shrink-0">
-            <h2 id="modalTitle" class="text-3xl font-bold text-white"></h2>
-            <button onclick="closeModal()" class="text-2xl text-[--graphite] hover:text-[--crimson]">« НАЗАД</button>
-        </header>
-        <section class="flex-1 w-full flex min-h-0">
-            <aside class="w-1/3 border-r border-graphite p-4 flex flex-col gap-3 bg-[#111] shrink-0">
-                <div id="modalBannerFrame" class="aspect-video w-full border border-dashed border-neutral-700 flex flex-col items-center justify-center text-center p-3 text-neutral-700">
-                    <!-- *** ЗАМЕНИ ТУК С ДИРЕКТНИЯ ЛИНК КЪМ ТВОЕТО ЛОГО (напр. logo.png) *** -->
-                    <img src="ТУК_ПОСТАВИ_ДИРЕКТНИЯ_ЛИНК_КЪМ_ЛОГОТО.png" alt="УЛИЦАТА ГОВОРИ ЛОГО" class="w-1/2 opacity-20">
-                    <span>ЗАЯВИ ПОЗИЦИЯ</span>
+        <!-- ЦЕНТРАЛНА КОЛОНА: ЧЕТЕЦ (ВЪТРЕШЕН СКРОЛ) -->
+        <main class="flex-1 p-6 overflow-y-auto inner-scroll bg-[#0b0b0d]">
+            
+            <!-- РАЗДЕЛ 1: МАНИФЕСТ -->
+            <section id="pane-manifesto" class="tab-pane active space-y-6 max-w-3xl">
+                <div class="border-b border-neutral-800 pb-3">
+                    <span class="text-xs font-bold text-red-500 uppercase tracking-widest">Тема на броя • Началото</span>
+                    <h2 class="text-2xl sm:text-3xl font-black text-neutral-100 tracking-wide mt-1">
+                        БИВШИ ОПЕРАТИВНИ СЛУЖИТЕЛИ СЛАГАТ КАРТИТЕ НА МАСАТА
+                    </h2>
+                    <p class="text-xs text-neutral-400 mt-1">Публикувано от Мартин Маринов & Димитър Николов</p>
                 </div>
-            </aside>
-            <article class="flex-1 p-5 space-y-3 text-lg font-serif leading-relaxed text-neutral-100 inner-scroll overflow-y-auto">
-                <p id="modalDescription"></p>
-                <div class="mt-4 border-t border-graphite pt-4 text-[--crimson]">Свържи се с Мартин Маринов или Димитър Николов на терен за уговорка.</div>
-            </article>
-        </section>
+
+                <!-- Банер за героите (чист SVG/CSS, не се чупи) -->
+                <div class="w-full bg-[#15151a] border border-neutral-800 rounded p-4 flex items-center space-x-4">
+                    <div class="w-16 h-16 bg-neutral-900 border border-red-900/50 rounded flex items-center justify-center shrink-0 text-red-500">
+                        <svg class="w-10 h-10 fill-current" viewBox="0 0 24 24">
+                            <path d="M12 2a5 5 0 105 5 5 5 0 00-5-5zm0 8a3 3 0 113-3 3 3 0 01-3 3zm9 11v-1a7 7 0 00-7-7h-4a7 7 0 00-7 7v1h2v-1a5 5 0 015-5h4a5 5 0 015 5v1z"/>
+                        </svg>
+                    </div>
+                    <div>
+                        <div class="text-base font-black text-neutral-200">МАРИНОВ & НИКОЛОВ</div>
+                        <div class="text-xs text-neutral-400 leading-relaxed mt-0.5">
+                            Години стаж в патрулите, разследванията и оперативните сектори. Сваляме значките, но не и принципите си.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Текст с едър, ясен шрифт за очите на играчите -->
+                <div class="space-y-4 text-base sm:text-lg text-neutral-200 leading-relaxed">
+                    <p>
+                        Дълги години бяхме част от машината. Охранявахме улиците, водехме разпити, събирахме гилзи и влизахме първи там, откъдето другите бягаха. Видяхме как работят честните момчета с патрулките, но видяхме и как сигнали срещу „правилните хора“ мистериозно изчезваха под килима на началниците.
+                    </p>
+                    <p class="p-3.5 bg-neutral-900/90 border-l-4 border-red-600 rounded-r text-neutral-100 font-medium">
+                        „Системата пази себе си, а улицата плаща сметката. Ние избрахме да останем с улицата.“
+                    </p>
+                    <p>
+                        Вестник <strong>„Улицата говори“</strong> се ражда като независима трибуна. Тук няма да четете захаросани пресрилийзи. Ще четете за реалността: откъде минават схемите, защо закъсняват сигналите на 112 и кой разпъва чадър над локалните структури.
+                    </p>
+                    <p>
+                        В този първи брой обявяваме официално нашето присъствие. Търсим коректни партньори сред заведенията и бизнеса, с които да осигурим логистика и независимост на нашите разследвания.
+                    </p>
+                </div>
+            </section>
+
+            <!-- РАЗДЕЛ 2: КАТАЛОГ РЕКЛАМА -->
+            <section id="pane-sponsors" class="tab-pane space-y-6 max-w-3xl">
+                <div class="border-b border-neutral-800 pb-3">
+                    <span class="text-xs font-bold text-red-500 uppercase tracking-widest">Рекламна площ • Брой 01</span>
+                    <h2 class="text-2xl font-black text-neutral-100">МЯСТО ЗА ВАШАТА РЕКЛАМА</h2>
+                    <p class="text-xs text-neutral-400 mt-1">Първите търговски обекти получават преференциално постоянно присъствие.</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="p-4 bg-[#15151a] border-2 border-dashed border-neutral-700 rounded flex flex-col justify-between space-y-4 hover:border-red-600 transition">
+                        <div>
+                            <span class="text-[10px] font-bold px-2 py-0.5 bg-red-950 text-red-400 rounded">КАРЕ: ЗАВЕДЕНИЕ / КЛУБ</span>
+                            <h3 class="text-lg font-black text-neutral-100 mt-2">МЯСТО ЗА ВАШИЯ ОБЕКТ</h3>
+                            <p class="text-sm text-neutral-400 mt-1">
+                                Представете вашия ресторант, нощен клуб или заведение пред всички играчи и полицейски патрули.
+                            </p>
+                        </div>
+                        <button onclick="showAdDetails('РЕКЛАМА ЗА ЗАВЕДЕНИЕ', 'Тази позиция включва постоянно каре в бюлетина, описание на заведението, адрес и отбелязване като проверен и сигурен обект в града. Свържете се с Маринов или Николов.')" class="w-full py-2 bg-neutral-800 hover:bg-red-700 text-white font-bold text-xs uppercase rounded transition">
+                            Виж условията
+                        </button>
+                    </div>
+
+                    <div class="p-4 bg-[#15151a] border-2 border-dashed border-neutral-700 rounded flex flex-col justify-between space-y-4 hover:border-red-600 transition">
+                        <div>
+                            <span class="text-[10px] font-bold px-2 py-0.5 bg-neutral-800 text-neutral-300 rounded">КАРЕ: СЕРВИЗ / СИГУРНОСТ</span>
+                            <h3 class="text-lg font-black text-neutral-100 mt-2">МЯСТО ЗА ВАШИЯ БИЗНЕС</h3>
+                            <p class="text-sm text-neutral-400 mt-1">
+                                Позиция за автосервиз, пътна помощ, охранителна фирма или денонощен магазин.
+                            </p>
+                        </div>
+                        <button onclick="showAdDetails('РЕКЛАМА ЗА ТЕХНИЧЕСКИ/ОХРАНИТЕЛЕН ОБЕКТ', 'Тази позиция дава директен контакт при аварии, ремонти или нужда от сигурност. Бюлетинът се чете пряко на таблетите в града.')" class="w-full py-2 bg-neutral-800 hover:bg-red-700 text-white font-bold text-xs uppercase rounded transition">
+                            Виж условията
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- РАЗДЕЛ 3: ТВ КАНАЛ -->
+            <section id="pane-channel" class="tab-pane space-y-4 max-w-3xl">
+                <div class="border-b border-neutral-800 pb-3">
+                    <span class="text-xs font-bold text-red-500 uppercase tracking-widest">Бъдещо развитие</span>
+                    <h2 class="text-2xl font-black text-neutral-100">СОБСТВЕН НОВИНАРСКИ ВИДЕО КАНАЛ</h2>
+                </div>
+                <div class="p-5 bg-[#15151a] border border-neutral-800 rounded space-y-3">
+                    <div class="text-red-500 font-bold text-sm uppercase tracking-wider">Етап II: Видео репортажи на живо</div>
+                    <p class="text-base text-neutral-300 leading-relaxed">
+                        След първоначалното структуриране на вестника и спонсорските пакети, екипът ни ще премине към създаване на видео студио и мобилни репортажни екипи с жива връзка от горещите точки в града.
+                    </p>
+                    <div class="text-xs text-neutral-500 font-mono">
+                        Статус: Подготовка на техническо оборудване и преговори за честоти.
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ДЯСНА КОЛОНА: КЛИКАЕМИ БАНЕРИ (СПОНСОРСТВО) -->
+        <aside class="w-60 bg-[#0f0f12] border-l border-neutral-800 p-4 shrink-0 flex flex-col space-y-3">
+            <div class="text-[11px] font-bold text-neutral-500 uppercase tracking-widest">Рекламни позиции</div>
+
+            <!-- Банер 1 -->
+            <div onclick="showAdDetails('РЕКЛАМНО МЯСТО #1 (ГОРНО)', 'Позиция с най-висока видимост на първа страница на таблета. Свободно за наемане за Брой 01.')" class="p-3 bg-neutral-900 border-2 border-dashed border-neutral-700 hover:border-red-600 rounded text-center cursor-pointer transition">
+                <div class="text-[10px] font-bold text-red-500 uppercase">СВОБОДНО</div>
+                <div class="text-sm font-black text-neutral-200 mt-1">МЯСТО ЗА РЕКЛАМА</div>
+                <div class="text-[11px] text-neutral-400">Ресторант / Клуб</div>
+            </div>
+
+            <!-- Банер 2 -->
+            <div onclick="showAdDetails('РЕКЛАМНО МЯСТО #2 (ДОЛНО)', 'Позиция за локални услуги и сервизи. Търсим спонсори за гориво и печатни разходи.')" class="p-3 bg-neutral-900 border-2 border-dashed border-neutral-700 hover:border-red-600 rounded text-center cursor-pointer transition">
+                <div class="text-[10px] font-bold text-red-500 uppercase">СВОБОДНО</div>
+                <div class="text-sm font-black text-neutral-200 mt-1">МЯСТО ЗА РЕКЛАМА</div>
+                <div class="text-[11px] text-neutral-400">Сервиз / Магазин</div>
+            </div>
+
+            <div class="mt-auto p-2 bg-neutral-950 border border-neutral-800/80 rounded text-center">
+                <span class="text-[10px] text-neutral-400">Контакт на терен:</span>
+                <div class="text-xs font-bold text-neutral-200">Маринов & Николов</div>
+            </div>
+        </aside>
+
     </div>
 
-    <!-- СКРИПТОВЕ ЗА ЧАС И ТАБОВЕ -->
+    <!-- МОДАЛЕН ПРОЗОРЕЦ (ОТВАРЯ СЕ ВЪТРЕ В ТАБЛЕТА) -->
+    <div id="adModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4" style="display: none;">
+        <div class="bg-[#15151a] border border-red-700 w-full max-w-md rounded p-5 space-y-4 shadow-2xl">
+            <div class="flex items-center justify-between border-b border-neutral-800 pb-2">
+                <h3 id="adModalTitle" class="text-base font-black text-neutral-100 uppercase">Заглавие</h3>
+                <button onclick="closeModal()" class="text-neutral-400 hover:text-white text-lg font-bold">✕</button>
+            </div>
+            <p id="adModalBody" class="text-sm text-neutral-300 leading-relaxed">
+                Текст на офертата.
+            </p>
+            <div class="pt-2 border-t border-neutral-800 text-right">
+                <button onclick="closeModal()" class="px-4 py-1.5 bg-red-700 hover:bg-red-800 text-white font-bold text-xs uppercase rounded transition">
+                    Разбрано
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ЛОГИКА ЗА ЧАС, ТАБОВЕ И МОДАЛ -->
     <script>
-        // Обновяване на датата и часа
-        function updateDateTime() {
+        // Часовник
+        function refreshClock() {
             const now = new Date();
-            const dateStr = now.toLocaleDateString('bg-BG', { weekday: 'Long', day: 'Numeric', month: 'Long', year: 'Numeric' });
-            const timeStr = now.toLocaleTimeString('bg-BG', { hour: '2-digit', minute: '2-digit' });
-            document.getElementById('date-time').innerText = `${dateStr}, ${timeStr}`;
+            const timeString = now.toTimeString().split(' ')[0];
+            const clockEl = document.getElementById('liveClock');
+            if (clockEl) clockEl.textContent = timeString;
         }
-        setInterval(updateDateTime, 1000);
-        updateDateTime();
+        setInterval(refreshClock, 1000);
+        refreshClock();
 
-        // Управление на табовете
-        function showTab(tabId) {
+        // Смяна на табовете
+        function openTab(tabName) {
             // Скриване на всички табове
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(content => content.classList.remove('active'));
-            
-            // Махане на активния клас от бутоните
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(btn => btn.classList.remove('active', 'border-l-2', 'border-[--crimson]', 'bg-[#1a1a1a]', 'text-white'));
-            buttons.forEach(btn => btn.classList.add('border-l-2', 'border-transparent', 'text-neutral-400'));
+            document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+            // Махане на активния цвят от бутоните
+            const navButtons = ['manifesto', 'sponsors', 'channel'];
+            navButtons.forEach(name => {
+                const btn = document.getElementById('btn-' + name);
+                if (btn) {
+                    btn.className = 'w-full text-left px-3 py-2.5 rounded hover:bg-neutral-800 text-neutral-300 flex items-center space-x-2 transition font-bold text-sm';
+                }
+            });
 
-            // Показване на активния таб
-            document.getElementById(tabId).classList.add('active');
-            
-            // Намиране и активиране на натиснатия бутон
-            const currentBtn = Array.from(buttons).find(btn => btn.onclick.toString().includes(tabId));
-            if (currentBtn) {
-                currentBtn.classList.remove('border-transparent', 'text-neutral-400');
-                currentBtn.classList.add('active', 'border-l-2', 'border-[--crimson]', 'bg-[#1a1a1a]', 'text-white');
+            // Активиране на избрания таб
+            const targetPane = document.getElementById('pane-' + tabName);
+            if (targetPane) targetPane.classList.add('active');
+
+            // Оцветяване на натиснатия бутон
+            const activeBtn = document.getElementById('btn-' + tabName);
+            if (activeBtn) {
+                activeBtn.className = 'w-full text-left px-3 py-2.5 rounded bg-red-700 text-white flex items-center space-x-2 transition font-bold text-sm';
             }
         }
 
-        // Управление на модала за спонсори
-        const modal = document.getElementById('sponsorModal');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalDescription = document.getElementById('modalDescription');
-        const modalBannerFrame = document.getElementById('modalBannerFrame');
-
-        function showSponsorDetails(title, description, bannerUrl) {
-            modalTitle.innerText = title;
-            modalDescription.innerText = description;
-            
-            // Вмъкване на баннера
-            modalBannerFrame.innerHTML = '';
-            const img = document.createElement('img');
-            img.src = bannerUrl;
-            img.alt = title;
-            img.className = 'w-full h-full object-cover';
-            modalBannerFrame.appendChild(img);
-            
-            modal.classList.add('active');
+        // Модален прозорец за рекламите
+        function showAdDetails(title, text) {
+            document.getElementById('adModalTitle').innerText = title;
+            document.getElementById('adModalBody').innerText = text;
+            document.getElementById('adModal').style.display = 'flex';
         }
 
         function closeModal() {
-            modal.classList.remove('active');
+            document.getElementById('adModal').style.display = 'none';
         }
     </script>
 </body>
