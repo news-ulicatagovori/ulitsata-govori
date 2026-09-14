@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="bg" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Улицата говори | Независим криминален бюлетин и разследвания</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: Inter & Playfair Display / Oswald for gritty newspaper feel -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;700&family=Inter:wght@300;400;500;600;700;800&family=Oswald:wght@500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              red: '#e11d48',
+              crimson: '#9f1239',
+              dark: '#0a0b0d',
+              charcoal: '#121418',
+              surface: '#1c1f26',
+              border: '#2a2f3d',
+              gold: '#d97706'
+            }
+          },
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            headline: ['Oswald', 'sans-serif'],
+            serif: ['Merriweather', 'serif'],
+            mono: ['Chakra Petch', 'monospace']
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Custom subtle gritty newspaper texture effect */
+    .paper-texture {
+      background-image: radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 0);
+      background-size: 24px 24px;
+    }
+    .red-stamp {
+      border: 2px dashed #e11d48;
+      color: #e11d48;
+      text-transform: uppercase;
+      font-weight: 800;
+      letter-spacing: 0.15em;
+      transform: rotate(-3deg);
+      display: inline-block;
+    }
+    /* Ticker animation */
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+    .animate-ticker {
+      display: flex;
+      width: 200%;
+      animation: marquee 32s linear infinite;
+    }
+    .animate-ticker:hover {
+      animation-play-state: paused;
+    }
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #0f1115;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #27272a;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #e11d48;
+    }
+  </style>
+</head>
+<body class="bg-zinc-950 text-zinc-200 font-sans min-h-screen antialiased selection:bg-brand-red selection:text-white flex flex-col transition-colors duration-200">
+
+  <div class="bg-brand-crimson text-white text-xs sm:text-sm font-semibold border-b border-red-900 sticky top-0 z-50 overflow-hidden shadow-lg">
+    <div class="max-w-7xl mx-auto flex items-center px-3 py-1.5">
+      <div class="flex items-center gap-1.5 shrink-0 bg-brand-red px-2.5 py-0.5 rounded uppercase tracking-wider font-mono text-[11px] font-bold shadow animate-pulse mr-3">
+        <i data-lucide="siren" class="w-3.5 h-3.5"></i>
+        <span>ЕКСКЛУЗИВНО</span>
+      </div>
+      <div class="overflow-hidden whitespace-nowrap w-full relative">
+        <div class="animate-ticker text-xs font-mono tracking-wide text-zinc-100 flex gap-8 items-center">
+          <span>🚨 СВОДКА 11:42: Сили на СДВР блокираха складова база край града след сигнал за нелегален акцизен склад</span>
+          <span>•</span>
+          <span>⚡ СЪОБЩЕНИЕ НА РЕДАКЦИЯТА: Маринов и Николов депозираха официално питане към Шесто РУ относно чадъра над автокражбите</span>
+          <span>•</span>
+          <span>⚖️ ПРОВЕРКА: Прокуратурата отказа коментар по протоколите за иззети веществени доказателства</span>
+          <span>•</span>
+          <span>🚨 СВОДКА 11:42: Сили на СДВР блокираха складова база край града след сигнал за нелегален акцизен склад</span>
+          <span>•</span>
+          <span>⚡ СЪОБЩЕНИЕ НА РЕДАКЦИЯТА: Маринов и Николов депозираха официално питане към Шесто РУ относно чадъра над автокражбите</span>
+        </div>
+      </div>
+      <div class="hidden md:flex items-center gap-3 shrink-0 pl-4 border-l border-red-800 text-[11px] font-mono text-zinc-200">
+        <span id="live-clock">14:09:22</span>
+      </div>
+    </div>
+  </div>
+
+  <header class="border-b border-zinc-800 bg-zinc-900/95 backdrop-blur sticky top-[33px] z-40">
+    <!-- Top utility bar -->
+    <div class="border-b border-zinc-800/60 text-zinc-400 text-xs py-1.5 px-4">
+      <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-4 text-zinc-400 font-mono text-[11px]">
+          <span class="flex items-center gap-1">
+            <i data-lucide="calendar" class="w-3 h-3 text-brand-red"></i>
+            <span id="current-date-bg">Понеделник, Септември 2026 г.</span>
+          </span>
+          <span class="hidden sm:inline-block text-zinc-600">|</span>
+          <span class="hidden sm:inline text-zinc-400">Брой: #004 (Независима Серия)</span>
+          <span class="hidden md:inline-block text-zinc-600">|</span>
+          <span class="hidden md:inline text-brand-gold">Фокус: Оперативни разкрития и градска криминалистика</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <button id="themeToggleBtn" title="Смяна на цветовата тема" class="hover:text-zinc-200 p-1 rounded hover:bg-zinc-800 transition">
+            <i data-lucide="sun-moon" class="w-3.5 h-3.5"></i>
+          </button>
+          <button onclick="openTipModal()" class="flex items-center gap-1.5 text-xs bg-brand-red/90 hover:bg-brand-red text-white font-semibold px-2.5 py-0.5 rounded transition shadow-sm">
+            <i data-lucide="shield-alert" class="w-3.5 h-3.5"></i>
+            <span>Подай анонимен сигнал</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Newspaper Masthead -->
+    <div class="max-w-7xl mx-auto px-4 py-5 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="text-center md:text-left">
+        <div class="flex items-baseline gap-2 justify-center md:justify-start">
+          <h1 class="text-4xl sm:text-5xl lg:text-6xl font-black font-headline tracking-tighter uppercase text-zinc-100 flex items-center gap-2">
+            <span class="text-brand-red font-mono">»</span> УЛИЦАТА ГОВОРИ
+          </h1>
+          <span class="text-xs font-mono uppercase px-2 py-0.5 bg-zinc-800 text-zinc-300 border border-zinc-700 rounded">Press</span>
+        </div>
+        <p class="text-xs sm:text-sm text-zinc-400 font-serif italic mt-1 max-w-xl">
+          „Истината без полицейски филтър, паркетен протокол и пиарски замазвания.“
+        </p>
+      </div>
+
+      <!-- Chief editors badge -->
+      <div class="flex items-center gap-4 bg-zinc-950/80 p-3 rounded-lg border border-zinc-800 shadow-inner">
+        <div class="flex -space-x-3">
+          <div class="w-10 h-10 rounded-full border-2 border-brand-red bg-zinc-800 flex items-center justify-center font-bold text-zinc-200 text-sm font-headline" title="Мартин Маринов (бивш инспектор)">
+            ММ
+          </div>
+          <div class="w-10 h-10 rounded-full border-2 border-zinc-700 bg-zinc-900 flex items-center justify-center font-bold text-zinc-300 text-sm font-headline" title="Димитър Николов (бивш опер. работник)">
+            ДН
+          </div>
+        </div>
+        <div class="text-left">
+          <div class="text-xs uppercase font-mono text-zinc-400">Главно Редакционно Звено:</div>
+          <div class="text-xs font-bold text-zinc-200">М. Маринов &amp; Д. Николов</div>
+          <div class="text-[10px] text-zinc-400 font-mono">Бивши оперативни служители на МВР</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Category Filter Bar -->
+    <nav class="border-t border-zinc-800 bg-zinc-900/60 px-4">
+      <div class="max-w-7xl mx-auto flex items-center justify-between overflow-x-auto py-2">
+        <div class="flex gap-1 sm:gap-2 whitespace-nowrap text-xs sm:text-sm font-headline uppercase tracking-wider font-semibold" id="categoryNav">
+          <button onclick="filterCategory('all', this)" class="cat-btn px-3 py-1.5 rounded text-white bg-brand-red transition">Всички теми</button>
+          <button onclick="filterCategory('investigation', this)" class="cat-btn px-3 py-1.5 rounded text-zinc-400 hover:text-white hover:bg-zinc-800 transition">Разследвания</button>
+          <button onclick="filterCategory('police', this)" class="cat-btn px-3 py-1.5 rounded text-zinc-400 hover:text-white hover:bg-zinc-800 transition">Полиция и Власт</button>
+          <button onclick="filterCategory('blotter', this)" class="cat-btn px-3 py-1.5 rounded text-zinc-400 hover:text-white hover:bg-zinc-800 transition">Оперативен дневник</button>
+          <button onclick="filterCategory('exclusive', this)" class="cat-btn px-3 py-1.5 rounded text-zinc-400 hover:text-white hover:bg-zinc-800 transition">Спецрепортажи</button>
+          <button onclick="filterCategory('sponsors', this)" class="cat-btn px-3 py-1.5 rounded text-zinc-400 hover:text-white hover:bg-zinc-800 transition">Бизнес и Спонсори</button>
+        </div>
+        <div class="relative hidden lg:block w-56 ml-4">
+          <input type="text" id="searchInput" oninput="handleSearch(this.value)" placeholder="Търсене в досиетата..." class="w-full bg-zinc-950 border border-zinc-800 rounded px-3 py-1 text-xs text-zinc-200 placeholder-zinc-500 focus:outline-none focus:border-brand-red">
+          <i data-lucide="search" class="w-3.5 h-3.5 text-zinc-500 absolute right-2.5 top-2 pointer-events-none"></i>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-4 py-6 flex-grow paper-texture">
+
+    <!-- Notice Card / Manifesto Banner -->
+    <div class="mb-6 p-4 rounded-lg bg-gradient-to-r from-zinc-900 via-zinc-900 to-brand-dark border border-zinc-800 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div class="flex items-center gap-3">
+        <div class="p-2.5 rounded bg-brand-red/20 text-brand-red border border-brand-red/30">
+          <i data-lucide="file-warning" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <h2 class="text-sm font-bold text-white uppercase tracking-wider font-headline">Позиция на редакцията: Защо пишем това</h2>
+          <p class="text-xs text-zinc-400 max-w-2xl font-serif">
+            След 25 години в системата знаем точно кога една преписка се "замита" и кои телефонни обаждания спират патрулките. Ние не търсим сензация, а търсим реалността, която се случва на асфалта.
+          </p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2 self-end md:self-auto shrink-0">
+        <span class="text-xs text-zinc-500 font-mono">Контакт с нас:</span>
+        <a href="mailto:redakcia@ulicatagovori.bg" class="text-xs font-mono bg-zinc-800 hover:bg-zinc-700 px-3 py-1.5 rounded text-zinc-200 border border-zinc-700 transition">redakcia@ulicatagovori.bg</a>
+      </div>
+    </div>
+
+    <!-- Main Grid Layout: 8 cols content + 4 cols sidebar -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+      
+      <!-- Primary Editorial Column -->
+      <section class="lg:col-span-8 space-y-8" id="articleStream">
+        
+        <!-- LEAD / HERO INVESTIGATION -->
+        <article class="article-item bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden shadow-xl group" data-category="investigation">
+          <div class="relative overflow-hidden aspect-video max-h-[380px] bg-zinc-950">
+            <img src="https://images.unsplash.com/photo-1590856029826-c7a73142bbf1?q=80&w=1200&auto=format&fit=crop" 
+                 alt="Криминално разследване" 
+                 class="w-full h-full object-cover opacity-80 group-hover:scale-105 transition-transform duration-700 filter grayscale contrast-125 group-hover:grayscale-0">
+            <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-zinc-950/40 to-transparent"></div>
+            
+            <div class="absolute top-4 left-4 flex gap-2">
+              <span class="bg-brand-red text-white text-xs font-headline font-bold uppercase px-3 py-1 rounded shadow">
+                Главно Разследване
+              </span>
+              <span class="bg-black/70 backdrop-blur text-brand-gold text-xs font-mono font-bold uppercase px-2.5 py-1 rounded border border-amber-500/30">
+                Досие № 84-Б
+              </span>
+            </div>
+
+            <div class="absolute bottom-4 left-4 right-4">
+              <div class="flex items-center gap-2 text-xs font-mono text-zinc-400 mb-1">
+                <span>Автор: Мартин Маринов</span>
+                <span>•</span>
+                <span>Преди 3 часа</span>
+                <span>•</span>
+                <span class="text-brand-red flex items-center gap-1"><i data-lucide="flame" class="w-3 h-3"></i> 4,820 прочита</span>
+              </div>
+              <h3 class="text-xl sm:text-3xl font-headline font-bold uppercase text-white leading-tight hover:text-brand-red transition cursor-pointer" onclick="openArticle(1)">
+                Сделка в полунощ: Кой контролира нощните клубове и защо патрулките подминават определени адреси?
+              </h3>
+            </div>
+          </div>
+
+          <div class="p-5">
+            <p class="text-zinc-300 text-sm sm:text-base font-serif leading-relaxed mb-4">
+              Месеци наред наши източници в охранителния сектор подават сигнали за преразпределение на наркопазара и охранителния бизнес в централните квартали. Когато обаче оперативните ни колеги стигнат до определени лица, протоколите странно засядат на бюрото на заместник-началника...
+            </p>
+            
+            <div class="flex items-center justify-between pt-4 border-t border-zinc-800 text-xs">
+              <div class="flex items-center gap-2 text-zinc-400 font-mono">
+                <i data-lucide="folder" class="w-3.5 h-3.5 text-zinc-500"></i>
+                <span>Тагове: #Наркотрафик #ОхранителниФирми #КорупцияМВР</span>
+              </div>
+              <button onclick="openArticle(1)" class="flex items-center gap-1 text-brand-red hover:text-red-400 font-bold uppercase tracking-wider font-headline text-sm">
+                <span>Пълният Доклад</span>
+                <i data-lucide="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          
+          <!-- Article 2 -->
+          <article class="article-item bg-zinc-900/90 border border-zinc-800 rounded-lg p-4 flex flex-col justify-between hover:border-zinc-700 transition" data-category="police">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-zinc-400 mb-2">
+                <span class="text-brand-red uppercase font-bold">ПОЛИЦИЯ И ВЛАСТ</span>
+                <span>Днес, 09:15</span>
+              </div>
+              <div class="relative h-44 w-full mb-3 rounded overflow-hidden bg-zinc-950">
+                <img src="https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&w=600&auto=format&fit=crop" alt="Полицейски патрул" class="w-full h-full object-cover filter grayscale hover:grayscale-0 transition duration-500">
+                <span class="absolute top-2 right-2 bg-black/80 font-mono text-[10px] text-zinc-300 px-2 py-0.5 rounded">Разработка Николов</span>
+              </div>
+              <h4 class="font-headline font-bold text-lg text-zinc-100 uppercase hover:text-brand-red transition cursor-pointer mb-2" onclick="openArticle(2)">
+                Питане до Шесто Районно: Защо спряха нощните КПП-та край индустриалната зона?
+              </h4>
+              <p class="text-xs text-zinc-400 font-serif line-clamp-3 mb-4">
+                След официален писмен отказ за среща с районния началник, редакцията ни публикува трите ключови въпроса относно разтоварените нелегални тирове с контрабанда миналия четвъртък.
+              </p>
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-zinc-800/80 text-xs">
+              <span class="text-zinc-500 font-mono">Документи: Приложени</span>
+              <button onclick="openArticle(2)" class="text-brand-red hover:underline font-bold text-xs uppercase font-headline">Прочети »</button>
+            </div>
+          </article>
+
+          <!-- Article 3 -->
+          <article class="article-item bg-zinc-900/90 border border-zinc-800 rounded-lg p-4 flex flex-col justify-between hover:border-zinc-700 transition" data-category="blotter">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-zinc-400 mb-2">
+                <span class="text-amber-500 uppercase font-bold">КРАЖБИ И СХЕМИ</span>
+                <span>Вчера, 22:40</span>
+              </div>
+              <div class="relative h-44 w-full mb-3 rounded overflow-hidden bg-zinc-950">
+                <img src="https://images.unsplash.com/photo-1508847154043-be5407fcaa5a?q=80&w=600&auto=format&fit=crop" alt="Нощен град" class="w-full h-full object-cover filter grayscale hover:grayscale-0 transition duration-500">
+                <span class="absolute top-2 right-2 bg-black/80 font-mono text-[10px] text-zinc-300 px-2 py-0.5 rounded">По оперативни данни</span>
+              </div>
+              <h4 class="font-headline font-bold text-lg text-zinc-100 uppercase hover:text-brand-red transition cursor-pointer mb-2" onclick="openArticle(3)">
+                Вълна от автокражби с нов "куфар" ретранслатор в южните квартали
+              </h4>
+              <p class="text-xs text-zinc-400 font-serif line-clamp-3 mb-4">
+                Как организирана банда от 4 души задига джипове за под 90 секунди без да разбива ключалките. Експертно мнение от бивш криминалист как да защитите автомобила си.
+              </p>
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-zinc-800/80 text-xs">
+              <span class="text-zinc-500 font-mono">Практически анализ</span>
+              <button onclick="openArticle(3)" class="text-brand-red hover:underline font-bold text-xs uppercase font-headline">Прочети »</button>
+            </div>
+          </article>
+
+          <!-- Article 4 -->
+          <article class="article-item bg-zinc-900/90 border border-zinc-800 rounded-lg p-4 flex flex-col justify-between hover:border-zinc-700 transition" data-category="exclusive">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-zinc-400 mb-2">
+                <span class="text-purple-400 uppercase font-bold">СПЕЦРЕПОРТАЖ</span>
+                <span>12 Септ. 2026</span>
+              </div>
+              <div class="relative h-44 w-full mb-3 rounded overflow-hidden bg-zinc-950">
+                <img src="https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=600&auto=format&fit=crop" alt="Камери и видеонаблюдение" class="w-full h-full object-cover filter grayscale hover:grayscale-0 transition duration-500">
+                <span class="absolute top-2 right-2 bg-black/80 font-mono text-[10px] text-zinc-300 px-2 py-0.5 rounded">Скрита камера</span>
+              </div>
+              <h4 class="font-headline font-bold text-lg text-zinc-100 uppercase hover:text-brand-red transition cursor-pointer mb-2" onclick="openArticle(4)">
+                "Слепите петна" на градското видеонаблюдение: Къде общината няма камери
+              </h4>
+              <p class="text-xs text-zinc-400 font-serif line-clamp-3 mb-4">
+                Пълна карта на периметрите, в които липсва покритие на камерите. Разговаряме с търговци и собственици на заведения защо сами финансират собствена сигурност.
+              </p>
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-zinc-800/80 text-xs">
+              <span class="text-zinc-500 font-mono">Картографиране</span>
+              <button onclick="openArticle(4)" class="text-brand-red hover:underline font-bold text-xs uppercase font-headline">Прочети »</button>
+            </div>
+          </article>
+
+          <!-- Article 5 / Commercial Sponsor Feature -->
+          <article class="article-item bg-zinc-900/90 border border-amber-900/50 rounded-lg p-4 flex flex-col justify-between hover:border-amber-600/60 transition" data-category="sponsors">
+            <div>
+              <div class="flex items-center justify-between text-xs font-mono text-amber-500 mb-2">
+                <span class="uppercase font-bold flex items-center gap-1"><i data-lucide="award" class="w-3.5 h-3.5"></i> РУБРИКА: СИГУРНИЯТ ГРАД</span>
+                <span class="bg-amber-950 text-amber-300 px-2 py-0.5 rounded text-[10px]">Партньор</span>
+              </div>
+              <div class="relative h-44 w-full mb-3 rounded overflow-hidden bg-zinc-950">
+                <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=600&auto=format&fit=crop" alt="Ресторант Оникс" class="w-full h-full object-cover">
+                <span class="absolute bottom-2 left-2 bg-black/80 font-headline text-xs text-white px-2 py-1 rounded">Клуб &amp; Ресторант „ОНИКС“</span>
+              </div>
+              <h4 class="font-headline font-bold text-lg text-zinc-100 uppercase hover:text-amber-400 transition cursor-pointer mb-2" onclick="openArticle(5)">
+                Как местният бизнес гарантира спокойствието на клиентите си: Моделът „Оникс“
+              </h4>
+              <p class="text-xs text-zinc-400 font-serif line-clamp-3 mb-4">
+                Собствениците на емблематичния комплекс споделят защо инвестират във физическа охрана от лицензирана фирма и нулева толерантност към нарушителите на реда.
+              </p>
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-zinc-800/80 text-xs">
+              <span class="text-amber-500/80 font-mono">Официален спонсор на броя</span>
+              <button onclick="openArticle(5)" class="text-amber-400 hover:underline font-bold text-xs uppercase font-headline">Повече »</button>
+            </div>
+          </article>
+        </div>
+
+        <!-- Callout Banner: "Търсим разговори с институциите" -->
+        <div class="p-6 rounded-xl bg-zinc-900 border-l-4 border-brand-red border-y border-r border-zinc-800 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="font-headline uppercase font-bold text-lg text-white">Право на Отговор и Официален Диалог</span>
+            <span class="red-stamp text-[10px] px-2 py-0.5">Конституционен Ред</span>
+          </div>
+          <p class="text-zinc-300 text-xs sm:text-sm font-serif leading-relaxed">
+            „Улицата говори“ изпраща редовни покани за интервю към ръководството на Областната дирекция на МВР и началниците на районните управления. Всеки материал подлежи на допълнение с официалната институционална позиция. Свободната журналистика не е враг на редовия полицай, а бариера срещу беззаконието.
+          </p>
+          <div class="text-xs font-mono text-zinc-400">
+            За контакти с пресцентъра: <a href="mailto:press@ulicatagovori.bg" class="text-brand-red underline">press@ulicatagovori.bg</a>
+          </div>
+        </div>
+
+      </section>
+
+      <aside class="lg:col-span-4 space-y-6">
+
+        <!-- Live Police Blotter / Оперативна Хроника -->
+        <div class="bg-zinc-900 border border-zinc-800 rounded-xl p-4 shadow-lg">
+          <div class="flex items-center justify-between pb-3 border-b border-zinc-800 mb-4">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-brand-red animate-ping"></span>
+              <h3 class="font-headline font-bold text-base uppercase text-white tracking-wider">Оперативен Бюлетин</h3>
+            </div>
+            <span class="text-[11px] font-mono text-zinc-400">24/7 Сводка</span>
+          </div>
+
+          <div class="space-y-3 font-mono text-xs" id="blotterList">
+            <!-- Event 1 -->
+            <div class="p-2.5 bg-zinc-950 rounded border border-zinc-800/80 hover:border-zinc-700 transition">
+              <div class="flex items-center justify-between text-[11px] text-zinc-400 mb-1">
+                <span class="text-brand-red font-bold">11:15 ч.</span>
+                <span class="bg-zinc-800 px-1.5 py-0.2 rounded text-zinc-300">ПТП / Бягство</span>
+              </div>
+              <p class="text-zinc-300 font-sans text-xs">
+                Ударен паркиран автомобил на бул. „България“. Шофьорът е изоставил колата си и се издирва от патрули.
+              </p>
+            </div>
+
+            <!-- Event 2 -->
+            <div class="p-2.5 bg-zinc-950 rounded border border-zinc-800/80 hover:border-zinc-700 transition">
+              <div class="flex items-center justify-between text-[11px] text-zinc-400 mb-1">
+                <span class="text-brand-red font-bold">08:40 ч.</span>
+                <span class="bg-zinc-800 px-1.5 py-0.2 rounded text-zinc-300">Проверка</span>
+              </div>
+              <p class="text-zinc-300 font-sans text-xs">
+                Масирани проверки за превишена скорост на изходите на града. 4 отнети книжки за алкохол над 1.2 промила.
+              </p>
+            </div>
+
+            <!-- Event 3 -->
+            <div class="p-2.5 bg-zinc-950 rounded border border-zinc-800/80 hover:border-zinc-700 transition">
+              <div class="flex items-center justify-between text-[11px] text-zinc-400 mb-1">
+                <span class="text-brand-red font-bold">03:12 ч.</span>
+                <span class="bg-zinc-800 px-1.5 py-0.2 rounded text-zinc-300">Взлом</span>
+              </div>
+              <p class="text-zinc-300 font-sans text-xs">
+                Опит за проникване в денонощна аптека в кв. „Централен“. Частната охрана е реагирала за 2 минути, нападателят е избягал.
+              </p>
+            </div>
+
+            <!-- Event 4 -->
+            <div class="p-2.5 bg-zinc-950 rounded border border-zinc-800/80 hover:border-zinc-700 transition">
+              <div class="flex items-center justify-between text-[11px] text-zinc-400 mb-1">
+                <span class="text-brand-red font-bold">Вчера 23:50</span>
+                <span class="bg-zinc-800 px-1.5 py-0.2 rounded text-zinc-300">Сбиване</span>
+              </div>
+              <p class="text-zinc-300 font-sans text-xs">
+                Конфликт между клиенти пред неохраняем павилион за бързо хранене. Един леко пострадал с аркада.
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-4 pt-3 border-t border-zinc-800 text-center">
+            <button onclick="openTipModal()" class="w-full py-2 bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-headline uppercase font-semibold rounded flex items-center justify-center gap-1.5 transition">
+              <i data-lucide="radio" class="w-3.5 h-3.5 text-brand-red"></i>
+              <span>Подай събитие за хрониката</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- COMMERCIAL & SPONSOR TILES (The Phase 1 Revenue Strategy) -->
+        <div class="space-y-4">
+          <div class="flex items-center justify-between text-xs font-mono text-zinc-400">
+            <span class="uppercase tracking-wider">Партньорска Мрежа</span>
+            <span class="text-[10px] bg-zinc-800 px-1.5 py-0.5 rounded text-zinc-400">Реклама</span>
+          </div>
+
+          <!-- Sponsor 1: Bar & Grill "Оникс" -->
+          <div class="group bg-gradient-to-b from-zinc-900 to-zinc-950 border border-zinc-800 p-4 rounded-xl hover:border-amber-500/50 transition">
+            <div class="flex items-center justify-between mb-2">
+              <span class="font-headline font-bold text-amber-500 uppercase text-sm tracking-wide">Механа &amp; Клуб „ОНИКС“</span>
+              <span class="text-[10px] font-mono text-zinc-500">Сигурна Зона</span>
+            </div>
+            <p class="text-xs text-zinc-300 font-serif mb-3">
+              „Храна, атмосфера и гарантирана сигурност за вашето семейство. Собствен охраняем паркинг и 24/7 видеонаблюдение.“
+            </p>
+            <div class="flex items-center justify-between text-[11px] font-mono pt-2 border-t border-zinc-800/80">
+              <span class="text-zinc-400">Резервации: 0888 123 45X</span>
+              <span class="text-amber-500 font-bold group-hover:underline">Виж Обекта →</span>
+            </div>
+          </div>
+
+          <!-- Sponsor 2: Security Services "ВАРДА" -->
+          <div class="group bg-gradient-to-b from-zinc-900 to-zinc-950 border border-zinc-800 p-4 rounded-xl hover:border-brand-red/50 transition">
+            <div class="flex items-center justify-between mb-2">
+              <div class="flex items-center gap-1.5">
+                <i data-lucide="shield-check" class="w-4 h-4 text-brand-red"></i>
+                <span class="font-headline font-bold text-white uppercase text-sm tracking-wide">СОТ и Охрана „ВАРДА“</span>
+              </div>
+              <span class="text-[10px] font-mono text-brand-red">Лиценз МВР</span>
+            </div>
+            <p class="text-xs text-zinc-300 font-serif mb-3">
+              Професионална реакция до 3 минути. Специални тарифи за заведения, офиси и складови бази в целия окръг.
+            </p>
+            <div class="flex items-center justify-between text-[11px] font-mono pt-2 border-t border-zinc-800/80">
+              <span class="text-zinc-400">Денонощен дежурен център</span>
+              <span class="text-brand-red font-bold group-hover:underline">Оферта →</span>
+            </div>
+          </div>
+
+          <!-- Sponsor Call-to-Action for Local Businesses -->
+          <div class="border border-dashed border-zinc-700 bg-zinc-950/60 p-4 rounded-xl text-center space-y-2">
+            <h4 class="font-headline font-bold uppercase text-xs text-zinc-200">Имате ли заведение или бизнес в града?</h4>
+            <p class="text-[11px] text-zinc-400 font-serif">
+              Станете спонсор на „Улицата говори“. Получете ексклузивно рекламно каре и ревю в рубриката ни „Сигурен обект на броя“.
+            </p>
+            <button onclick="openCommercialModal()" class="mt-2 text-xs font-headline font-bold uppercase tracking-wider bg-brand-red hover:bg-red-700 text-white px-4 py-1.5 rounded transition shadow">
+              Заяви рекламно каре
+            </button>
+          </div>
+        </div>
+
+        <!-- Editorial Info Card -->
+        <div class="bg-zinc-900/60 border border-zinc-800 rounded-xl p-4 text-xs font-mono space-y-2 text-zinc-400">
+          <div class="text-zinc-200 font-bold uppercase font-headline">За Екипа:</div>
+          <p class="text-[11px] leading-relaxed">
+            <strong class="text-zinc-200">Мартин Маринов</strong> — 14 години в сектор „Криминална полиция“, разследване на тежки престъпления.<br>
+            <strong class="text-zinc-200">Димитър Николов</strong> — 12 години оперативен работник, икономически и трансгранични схеми.
+          </p>
+          <div class="pt-2 border-t border-zinc-800 text-[10px] text-zinc-500">
+            Изданието се издава по силата на чл. 39 и 40 от Конституцията на Р. България.
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </main>
+
+  <div id="articleModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 overflow-y-auto">
+    <div class="bg-zinc-900 border border-zinc-700 max-w-3xl w-full rounded-xl overflow-hidden shadow-2xl my-8 relative flex flex-col max-h-[90vh]">
+      <!-- Header -->
+      <div class="flex items-center justify-between p-4 border-b border-zinc-800 bg-zinc-950">
+        <div class="flex items-center gap-2">
+          <span class="red-stamp text-[10px] px-1.5 py-0.2" id="modalTag">РАЗСЛЕДВАНЕ</span>
+          <span class="text-xs font-mono text-zinc-400" id="modalDate">14 Септември 2026</span>
+        </div>
+        <button onclick="closeArticleModal()" class="text-zinc-400 hover:text-white p-1 rounded hover:bg-zinc-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <!-- Scrollable content -->
+      <div class="p-6 overflow-y-auto space-y-4 font-serif text-zinc-300 text-sm sm:text-base leading-relaxed" id="modalBody">
+        <!-- Content will be injected dynamically by JS -->
+      </div>
+
+      <!-- Modal Footer -->
+      <div class="p-4 border-t border-zinc-800 bg-zinc-950/80 flex flex-col sm:flex-row justify-between items-center gap-3">
+        <div class="text-xs font-mono text-zinc-400">
+          Редакция: <span class="text-zinc-200">Маринов & Николов</span>
+        </div>
+        <div class="flex gap-2">
+          <button onclick="printArticle()" class="flex items-center gap-1 text-xs font-headline uppercase font-bold bg-zinc-800 hover:bg-zinc-700 text-zinc-200 px-3 py-1.5 rounded transition">
+            <i data-lucide="printer" class="w-3.5 h-3.5"></i> Печат на досието
+          </button>
+          <button onclick="closeArticleModal()" class="text-xs font-headline uppercase font-bold bg-brand-red hover:bg-red-700 text-white px-4 py-1.5 rounded transition">
+            Затвори
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tipModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-brand-red/50 max-w-lg w-full rounded-xl overflow-hidden shadow-2xl relative">
+      <div class="p-4 bg-zinc-950 border-b border-zinc-800 flex items-center justify-between">
+        <div class="flex items-center gap-2 text-brand-red font-headline font-bold uppercase text-base">
+          <i data-lucide="shield-alert" class="w-5 h-5"></i>
+          <span>Анонимна Пощенска Кутия / Сигнал</span>
+        </div>
+        <button onclick="closeTipModal()" class="text-zinc-400 hover:text-white p-1 rounded hover:bg-zinc-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="tipForm" onsubmit="handleTipSubmit(event)" class="p-6 space-y-4 text-xs font-mono">
+        <div class="bg-brand-red/10 border border-brand-red/30 p-3 rounded text-zinc-300 text-[11px] leading-relaxed">
+          <strong class="text-brand-red">ГАРАНЦИЯ ЗА АНОНИМНОСТ:</strong> Тази форма не записва вашия IP адрес. Ние сме бивши полицаи и знаем как се пазят свидетели и източници.
+        </div>
+
+        <div>
+          <label class="block text-zinc-300 font-bold mb-1 uppercase">За какво се отнася сигналът? *</label>
+          <select id="tipCategory" required class="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-zinc-200 focus:border-brand-red focus:outline-none">
+            <option value="police">Полицейски чадър / Бездействие на РУ</option>
+            <option value="drugs">Разпространение на наркотици / Нощен клуб</option>
+            <option value="theft">Автокражби или организирани обири</option>
+            <option value="corruption">Общинска или административна корупция</option>
+            <option value="other">Друго криминално деяние</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-zinc-300 font-bold mb-1 uppercase">Локация / Обект / Район *</label>
+          <input type="text" id="tipLocation" required placeholder="напр. ул. Раковски, склад № 4 или име на заведение" class="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-zinc-200 focus:border-brand-red focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-zinc-300 font-bold mb-1 uppercase">Описание на факти и замесени лица *</label>
+          <textarea id="tipDetails" rows="4" required placeholder="Опишете хронологията, часове, регистрации на автомобили, имена или длъжности..." class="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-zinc-200 focus:border-brand-red focus:outline-none font-sans text-xs"></textarea>
+        </div>
+
+        <div>
+          <label class="block text-zinc-400 mb-1 uppercase">Контакт за обратна връзка (Незадължително)</label>
+          <input type="text" id="tipContact" placeholder="Кодиран мейл, Telegram потребител или оставете празно" class="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-zinc-200 focus:border-brand-red focus:outline-none">
+        </div>
+
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeTipModal()" class="px-4 py-2 bg-zinc-800 text-zinc-300 rounded uppercase font-headline font-bold hover:bg-zinc-700">Отказ</button>
+          <button type="submit" class="px-5 py-2 bg-brand-red hover:bg-red-700 text-white rounded uppercase font-headline font-bold shadow flex items-center gap-1.5">
+            <i data-lucide="send" class="w-4 h-4"></i> Изпрати директно до Маринов и Николов
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="commercialModal" class="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4">
+    <div class="bg-zinc-900 border border-amber-500/50 max-w-md w-full rounded-xl overflow-hidden shadow-2xl relative">
+      <div class="p-4 bg-zinc-950 border-b border-zinc-800 flex items-center justify-between">
+        <div class="flex items-center gap-2 text-amber-500 font-headline font-bold uppercase text-base">
+          <i data-lucide="briefcase" class="w-5 h-5"></i>
+          <span>Заявка за Реклама и Спонсорство</span>
+        </div>
+        <button onclick="closeCommercialModal()" class="text-zinc-400 hover:text-white p-1 rounded hover:bg-zinc-800">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+
+      <form id="commercialForm" onsubmit="handleCommercialSubmit(event)" class="p-6 space-y-4 text-xs font-mono">
+        <p class="text-zinc-300 text-xs font-serif leading-relaxed">
+          Подкрепете независимото разследване. Търсим коректни партньори сред местните ресторанти, заведения, сервизи и охранителни дружества.
+        </p>
+        <div>
+          <label class="block text-zinc-300 font-bold mb-1 uppercase">Име на обект / Заведение / Компания *</label>
+          <input type="text" id="commBusiness" required placeholder="напр. Ресторант 'Тракия' / Сервиз 'Експрес'" class="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-zinc-200 focus:border-amber-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-zinc-300 font-bold mb-1 uppercase">Лице за контакт и телефон *</label>
+          <input type="text" id="commPhone" required placeholder="Име и телефонен номер" class="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-zinc-200 focus:border-amber-500 focus:outline-none">
+        </div>
+        <div>
+          <label class="block text-zinc-300 font-bold mb-1 uppercase">Предпочитан рекламен пакет</label>
+          <select id="commPlan" class="w-full bg-zinc-950 border border-zinc-800 rounded p-2 text-zinc-200 focus:border-amber-500 focus:outline-none">
+            <option value="banner">Банер в сайта + Каре в печатното издание</option>
+            <option value="review">Авторско представяне в рубрика „Сигурен град“</option>
+            <option value="general">Генерално партньорство за месеца</option>
+          </select>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeCommercialModal()" class="px-4 py-2 bg-zinc-800 text-zinc-300 rounded uppercase font-headline font-bold hover:bg-zinc-700">Затвори</button>
+          <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-500 text-white rounded uppercase font-headline font-bold shadow">
+            Изпрати към Редакцията
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="toast" class="fixed bottom-5 right-5 z-50 bg-zinc-900 border border-brand-red text-white px-4 py-3 rounded-lg shadow-2xl flex items-center gap-3 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none max-w-sm">
+    <i data-lucide="check-circle" class="w-5 h-5 text-green-500 shrink-0" id="toastIcon"></i>
+    <div class="text-xs font-mono" id="toastMessage">Операцията е успешна.</div>
+  </div>
+
+  <footer class="border-t border-zinc-800 bg-zinc-950 text-zinc-400 text-xs py-10 mt-12 font-mono">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div class="space-y-3">
+        <div class="flex items-center gap-2">
+          <span class="text-2xl font-black font-headline tracking-tight uppercase text-zinc-100">
+            УЛИЦАТА ГОВОРИ
+          </span>
+        </div>
+        <p class="text-[11px] font-serif text-zinc-400 leading-relaxed">
+          Независим информационен орган за криминални хроники, оперативни разследвания и сигурност в града. Основан от бивши служители на МВР.
+        </p>
+        <div class="text-[10px] text-zinc-500">
+          София / Регионална мрежа корреспонденти.
+        </div>
+      </div>
+
+      <div>
+        <h4 class="font-headline font-bold uppercase text-zinc-200 text-sm mb-3">Главни Рубрики</h4>
+        <ul class="space-y-1.5 text-[11px]">
+          <li><a href="#" onclick="filterCategory('investigation'); return false;" class="hover:text-brand-red transition">Оперативни разследвания</a></li>
+          <li><a href="#" onclick="filterCategory('police'); return false;" class="hover:text-brand-red transition">Полицейски дневник и контрол</a></li>
+          <li><a href="#" onclick="filterCategory('blotter'); return false;" class="hover:text-brand-red transition">Хроника на произшествията</a></li>
+          <li><a href="#" onclick="filterCategory('sponsors'); return false;" class="hover:text-brand-red transition">Бизнес каталог „Сигурен град“</a></li>
+        </ul>
+      </div>
+
+      <div>
+        <h4 class="font-headline font-bold uppercase text-zinc-200 text-sm mb-3">Редакционна Колегия</h4>
+        <div class="text-[11px] space-y-1 text-zinc-400">
+          <p><strong class="text-zinc-300">Мартин Маринов</strong> — Главен редактор / Тежки престъпления</p>
+          <p><strong class="text-zinc-300">Димитър Николов</strong> — Зам.-главен редактор / Икономически сектор</p>
+          <p class="text-brand-red pt-1">Връзка за класифицирани документи:</p>
+          <p class="text-zinc-300 select-all">marinov.nikolov.redakcia@proton.me</p>
+        </div>
+      </div>
+
+      <div>
+        <h4 class="font-headline font-bold uppercase text-zinc-200 text-sm mb-3">Правна Информация</h4>
+        <p class="text-[10px] font-serif leading-relaxed text-zinc-500 mb-3">
+          Материалите на този сайт се публикуват при спазване на Закона за задълженията и договорите, презумпцията за невиновност и журналистическата етика. Източниците на информация се пазят в тайна.
+        </p>
+        <button onclick="openTipModal()" class="w-full py-2 bg-brand-crimson hover:bg-brand-red text-white text-xs font-headline uppercase font-bold rounded shadow transition">
+          Свържи се с редакторите
+        </button>
+      </div>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-4 mt-8 pt-4 border-t border-zinc-900 flex flex-col sm:flex-row justify-between items-center text-[10px] text-zinc-600">
+      <div>© 2026 „Улицата говори“. Всички права запазени.</div>
+      <div class="mt-2 sm:mt-0 font-mono">
+        Статус на сървъра: <span class="text-emerald-500">Защитен / SSL Криптиран</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Articles repository curated with authentic Bulgarian investigative copy
+    const articlesDatabase = {
+      1: {
+        tag: "ГЛАВНО РАЗСЛЕДВАНЕ",
+        date: "14 Септември 2026 г. | Екип Маринов & Николов",
+        title: "Сделка в полунощ: Кой контролира нощните клубове и защо патрулките подминават определени адреси?",
+        image: "https://images.unsplash.com/photo-1590856029826-c7a73142bbf1?q=80&w=1200&auto=format&fit=crop",
+        content: `
+          <p class="font-bold text-base text-zinc-100">От Мартин Маринов и Димитър Николов</p>
+          <p>В продължение на три седмици екипът на „Улицата говори“ извърши независим мониторинг върху три ключови заведения в южната зона на града. След многобройни сигнали на съседи за откровен пласинг на наркотични вещества и масови скандали, реакцията на дежурните патрули се оказа поразително сходна: закъснения от над 40 минути или просто бавно преминаване на патрулния автомобил с изгасени светлини без съставяне на констативен протокол.</p>
+          <blockquote class="p-4 border-l-4 border-brand-red bg-zinc-950 font-serif italic text-zinc-200 my-4">
+            „Когато бяхме в системата, този номер го знаехме наизуст — нарича се 'контролирано ненамеса'. Докато началникът на смяната не разреши влизане с бус и качулки, младшите полицаи нямат право дори да поискат лични карти на входа.“ — Димитър Николов.
+          </blockquote>
+          <h4 class="font-headline text-lg font-bold text-white uppercase mt-4">Кои са собствениците в сянка?</h4>
+          <p>Фирмените справки показват, че на хартия заведенията се водят на 22-годишни подставени лица от съседни села без никакви доходи. Реалният контрол и охраната обаче се осъществяват от бивши кадри от разформировани преди години групировки. Източниците ни споделят, че всеки понеделник на определен адрес се предават пликове, класифицирани като „такса спокойствие“.</p>
+          <p>Ние от „Улицата говори“ изпратихме официално запитване до инспектората на МВР с регистрационните номера на три автомобила, засичани редовно на тези локации по време на смените. Очакваме отговор в рамките на 7 работни дни. Ако отговор няма — ще публикуваме имената на замесените полицаи с техните длъжности.</p>
+        `
+      },
+      2: {
+        tag: "ПОЛИЦИЯ И ВЛАСТ",
+        date: "14 Септември 2026 г. | Опер. разработка Николов",
+        title: "Питане до Шесто Районно: Защо спряха нощните КПП-та край индустриалната зона?",
+        image: "https://images.unsplash.com/photo-1541872703-74c5e44368f9?q=80&w=800&auto=format&fit=crop",
+        content: `
+          <p class="font-bold text-base text-zinc-100">Анализ на Димитър Николов</p>
+          <p>След въвеждането на засилен контрол по пътищата миналия месец, един участък остана подозрително изолиран — околовръстната отсечка край старите складове в Индустриална зона 'Изток'.</p>
+          <p>По оперативни данни, с които разполагаме от действащи колеги, за пет поредни нощи през участъка са преминали пет тежкотоварни камиона без задължителния електронен кантар и митнически пломби. След опит на дежурен автопатрул да спре първия камион, по радиостанцията е последвала директна заповед: „Освободете платното, движи се служебен конвой“.</p>
+          <p>Вестник „Улицата говори“ внесе официално писмо до директора на ОДМВР с молба за лично интервю и изясняване на протокола. Отказът бе мотивиран със „служебна тайна“. За нас обаче тайна няма — питаме публично кой издаде заповедта по радиостанция на 8 септември в 02:14 часа?</p>
+        `
+      },
+      3: {
+        tag: "КРАЖБИ И СХЕМИ",
+        date: "13 Септември 2026 г. | Съвети за сигурност",
+        title: "Вълна от автокражби с нов 'куфар' ретранслатор в южните квартали",
+        image: "https://images.unsplash.com/photo-1508847154043-be5407fcaa5a?q=80&w=800&auto=format&fit=crop",
+        content: `
+          <p class="font-bold text-base text-zinc-100">Инструктаж от Мартин Маринов</p>
+          <p>В рамките на последните десет дни са регистрирани 6 отнети автомобила от висок клас само в два съседни квартала. Схемата се повтаря: кражбата трае под 90 секунди посредством удължител на обхвата (т.нар. 'куфар' или ретранслатор за безключово палене Keyless-Go).</p>
+          <h4 class="font-headline text-lg font-bold text-white uppercase mt-4">Как работи бандата:</h4>
+          <p>Единият крадец застава близо до входната врата на дома ви с приемник, който улавя сигнала от ключа на закачалката в коридора. Вторият стои до автомобила с предавател, отключва вратата, натиска старт-бутона и потегля, преди алармата изобщо да се задейства.</p>
+          <div class="p-3 bg-zinc-950 border border-zinc-800 rounded my-3 text-xs font-mono">
+            <strong>СЪВЕТ НА ЧЕНГЕТО:</strong> Дръжте автомобилния си ключ в метална кутия (Фарадеев кафез) или защитно калъфче веднага щом влезете у дома. Поставете допълнителен механичен блокаж на волана или скрито реле за прекъсване на горивната помпа.
+          </div>
+        `
+      },
+      4: {
+        tag: "СПЕЦРЕПОРТАЖ",
+        date: "12 Септември 2026 г. | Репортаж на терен",
+        title: "„Слепите петна“ на градското видеонаблюдение: Къде общината няма камери",
+        image: "https://images.unsplash.com/photo-1557597774-9d273605dfa9?q=80&w=800&auto=format&fit=crop",
+        content: `
+          <p>Когато стане инцидент, първото оправдание на органите е: „Точно там няма камери на общината“. Екипът ни измина над 40 километра пеша и с автомобил, картографирайки всички обществени камери в централната и западната част на града.</p>
+          <p>Резултатът е шокиращ: над 65% от вътрешнокварталните улици и паркинги нямат нито едно работещо общинско око. Гражданите разчитат единствено на охранителните камери на кварталните кафенета, магазини и заведения, които на добра воля предоставят записите си при престъпления.</p>
+          <p>В следващия брой ще публикуваме пълната карта на „черните дупки“ и разходите от обществената поръчка за камери, струваща милиони, а неработеща в ключови точки.</p>
+        `
+      },
+      5: {
+        tag: "ПАРТНЬОРСКО ПРЕДСТАВЯНЕ",
+        date: "Партньорска рубрика: Безопасен град",
+        title: "Как местният бизнес гарантира спокойствието на клиентите си: Моделът „Оникс“",
+        image: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop",
+        content: `
+          <p class="font-bold text-base text-zinc-100">Рубрика: Сигурен Обект на Броя</p>
+          <p>Като бивши полицаи много добре знаем, че доброто заведение не е просто добра кухня и приятна музика, а спокойствие за клиентите. Ресторант и клуб „Оникс“ е един от първите официални партньори на нашия вестник, които открито заявяват политика на нулева толерантност към нарушаването на обществения ред.</p>
+          <p>Заведението разполага с 32 HD камери с денонощен архив, лицензирана частна физическа охрана на входа и собствен осветен паркинг. Това е моделът, по който трябва да работят всички търговски обекти в града ни, за да бъде нощният живот защитен от провокации и агресия.</p>
+          <p>Редакцията на „Улицата говори“ благодари на екипа на „Оникс“ за подкрепата към независимата ни медия.</p>
+        `
+      }
+    };
+
+    function updateClock() {
+      const now = new Date();
+      const timeStr = now.toTimeString().split(' ')[0];
+      const clockEl = document.getElementById('live-clock');
+      if (clockEl) clockEl.textContent = timeStr;
+    }
+    setInterval(updateClock, 1000);
+    updateClock();
+
+    // Theme toggle (Dark / Light adaptation)
+    const themeToggleBtn = document.getElementById('themeToggleBtn');
+    themeToggleBtn.addEventListener('click', () => {
+      const html = document.documentElement;
+      if (html.classList.contains('dark')) {
+        html.classList.remove('dark');
+        showToast('Превключихте в светъл режим', 'sun');
+      } else {
+        html.classList.add('dark');
+        showToast('Превключихте в контрастен нощен режим', 'moon');
+      }
+    });
+
+    // Category Filtering
+    function filterCategory(category, btnElement) {
+      const articles = document.querySelectorAll('.article-item');
+      articles.forEach(article => {
+        const itemCat = article.getAttribute('data-category');
+        if (category === 'all' || itemCat === category) {
+          article.style.display = 'flex';
+        } else {
+          article.style.display = 'none';
+        }
+      });
+
+      // Update button visual states
+      if (btnElement) {
+        document.querySelectorAll('.cat-btn').forEach(btn => {
+          btn.classList.remove('bg-brand-red', 'text-white');
+          btn.classList.add('text-zinc-400');
+        });
+        btnElement.classList.add('bg-brand-red', 'text-white');
+        btnElement.classList.remove('text-zinc-400');
+      }
+    }
+
+    // Search filter
+    function handleSearch(query) {
+      const term = query.toLowerCase().trim();
+      const articles = document.querySelectorAll('.article-item');
+      articles.forEach(article => {
+        const text = article.innerText.toLowerCase();
+        if (text.includes(term)) {
+          article.style.display = 'flex';
+        } else {
+          article.style.display = 'none';
+        }
+      });
+    }
+
+    // Modal Handlers
+    function openArticle(id) {
+      const doc = articlesDatabase[id];
+      if (!doc) return;
+
+      document.getElementById('modalTag').innerText = doc.tag;
+      document.getElementById('modalDate').innerText = doc.date;
+      
+      const bodyHtml = `
+        <h2 class="text-2xl sm:text-3xl font-headline font-bold uppercase text-white leading-tight mb-4">${doc.title}</h2>
+        <div class="rounded-lg overflow-hidden my-4 max-h-[360px] bg-black">
+          <img src="${doc.image}" alt="${doc.title}" class="w-full h-full object-cover">
+        </div>
+        <div class="space-y-4">
+          ${doc.content}
+        </div>
+      `;
+
+      document.getElementById('modalBody').innerHTML = bodyHtml;
+      const modal = document.getElementById('articleModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+      lucide.createIcons();
+    }
+
+    function closeArticleModal() {
+      const modal = document.getElementById('articleModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = 'auto';
+    }
+
+    function printArticle() {
+      window.print();
+    }
+
+    // Anonymous Tip Modal
+    function openTipModal() {
+      const modal = document.getElementById('tipModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeTipModal() {
+      const modal = document.getElementById('tipModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = 'auto';
+    }
+
+    function handleTipSubmit(event) {
+      event.preventDefault();
+      const cat = document.getElementById('tipCategory').value;
+      const loc = document.getElementById('tipLocation').value;
+      const details = document.getElementById('tipDetails').value;
+
+      // Add event to live blotter dynamically for realism
+      const blotterList = document.getElementById('blotterList');
+      const newCard = document.createElement('div');
+      newCard.className = "p-2.5 bg-zinc-950 rounded border border-brand-red/60 animate-pulse text-xs font-mono";
+      newCard.innerHTML = `
+        <div class="flex items-center justify-between text-[11px] text-zinc-400 mb-1">
+          <span class="text-brand-red font-bold">СЕГА</span>
+          <span class="bg-red-950 text-brand-red px-1.5 py-0.2 rounded font-bold">НОВ СИГНАЛ</span>
+        </div>
+        <p class="text-zinc-200 font-sans text-xs">
+          <strong>${loc}:</strong> ${details.substring(0, 75)}... (В процес на проверка от Маринов)
+        </p>
+      `;
+      blotterList.prepend(newCard);
+
+      closeTipModal();
+      document.getElementById('tipForm').reset();
+      showToast('Сигналът е приет криптирано в оперативната поща!', 'check-circle');
+    }
+
+    // Commercial Modal
+    function openCommercialModal() {
+      const modal = document.getElementById('commercialModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeCommercialModal() {
+      const modal = document.getElementById('commercialModal');
+      modal.classList.add('hidden');
+      modal.classList.remove('flex');
+      document.body.style.overflow = 'auto';
+    }
+
+    function handleCommercialSubmit(event) {
+      event.preventDefault();
+      const name = document.getElementById('commBusiness').value;
+      closeCommercialModal();
+      document.getElementById('commercialForm').reset();
+      showToast(`Благодарим, ${name}! Маринов или Николов ще се свържат с вас за среща.`, 'check-circle');
+    }
+
+    // Custom Toast
+    function showToast(message, iconName) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMessage');
+      toastMsg.innerText = message;
+      
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0');
+        toast.classList.remove('translate-y-0', 'opacity-100');
+      }, 4000);
+    }
+
+    // Close modals on Escape key or outside click
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') {
+        closeArticleModal();
+        closeTipModal();
+        closeCommercialModal();
+      }
+    });
+
+    document.getElementById('articleModal').addEventListener('click', (e) => {
+      if (e.target.id === 'articleModal') closeArticleModal();
+    });
+
+    document.getElementById('tipModal').addEventListener('click', (e) => {
+      if (e.target.id === 'tipModal') closeTipModal();
+    });
+
+    document.getElementById('commercialModal').addEventListener('click', (e) => {
+      if (e.target.id === 'commercialModal') closeCommercialModal();
+    });
+
+    // Initialize lucide icons on load
+    window.addEventListener('DOMContentLoaded', () => {
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
